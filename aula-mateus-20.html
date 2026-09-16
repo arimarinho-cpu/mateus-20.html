@@ -1,0 +1,969 @@
+<title>A Grande Inversão do Reino</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+  :root{
+    --bg:#FBF6EC;
+    --bg-raised:#FFFDF7;
+    --bg-sunken:#F3EBDB;
+    --ink:#2B2116;
+    --ink-soft:#71614E;
+    --ink-faint:#9C8C77;
+    --rule:#E3D6BD;
+    --accent:#8C2F2F;
+    --accent-ink:#FFF6F1;
+    --gold:#A9762F;
+    --scene1:#A9762F;
+    --scene2:#8C2F2F;
+    --scene3:#3E5C76;
+    --scene4:#A2593F;
+    --ok:#3E6B4F;
+    --bad:#A03A3A;
+    --shadow: 0 1px 2px rgba(43,33,22,.06), 0 8px 24px rgba(43,33,22,.06);
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-body: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    --font-ui: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1B1711;
+      --bg-raised:#241F17;
+      --bg-sunken:#161310;
+      --ink:#F1E7D6;
+      --ink-soft:#C4B49C;
+      --ink-faint:#8B7D68;
+      --rule:#3A3122;
+      --accent:#E08B6B;
+      --accent-ink:#241108;
+      --gold:#D8AA5E;
+      --scene1:#D8AA5E;
+      --scene2:#E08B6B;
+      --scene3:#8FADC9;
+      --scene4:#D99A78;
+      --ok:#7FBE93;
+      --bad:#E08787;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#1B1711;
+    --bg-raised:#241F17;
+    --bg-sunken:#161310;
+    --ink:#F1E7D6;
+    --ink-soft:#C4B49C;
+    --ink-faint:#8B7D68;
+    --rule:#3A3122;
+    --accent:#E08B6B;
+    --accent-ink:#241108;
+    --gold:#D8AA5E;
+    --scene1:#D8AA5E;
+    --scene2:#E08B6B;
+    --scene3:#8FADC9;
+    --scene4:#D99A78;
+    --ok:#7FBE93;
+    --bad:#E08787;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:17px;
+    line-height:1.65;
+    padding:0 20px;
+  }
+  ::selection{ background:var(--accent); color:var(--accent-ink); }
+  a{ color:var(--accent); }
+  h1,h2,h3{ font-family:var(--font-display); text-wrap:balance; color:var(--ink); margin:0; }
+  .wrap{ max-width:700px; margin:0 auto; }
+  .wrap-wide{ max-width:760px; margin:0 auto; }
+
+  .eyebrow{
+    font-family:var(--font-ui);
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.11em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    margin:0 0 10px;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:64px 0 40px;
+    border-bottom:1px solid var(--rule);
+  }
+  .hero .eyebrow{ color:var(--accent); }
+  .hero h1{
+    font-size:clamp(34px,6vw,52px);
+    font-weight:700;
+    line-height:1.05;
+    margin-bottom:14px;
+  }
+  .hero .verse-ref{
+    font-family:var(--font-ui);
+    font-size:15px;
+    color:var(--ink-soft);
+    margin-bottom:22px;
+  }
+  .pillars{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:28px;
+  }
+  .pillar-tag{
+    font-family:var(--font-ui);
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:.03em;
+    padding:5px 12px;
+    border-radius:100px;
+    color:var(--accent-ink);
+    white-space:nowrap;
+  }
+  .thesis{
+    font-family:var(--font-display);
+    font-size:20px;
+    font-weight:500;
+    line-height:1.5;
+    color:var(--ink);
+    border-left:3px solid var(--accent);
+    padding-left:18px;
+    margin-bottom:26px;
+  }
+  .hero-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px 14px;
+    font-family:var(--font-ui);
+    font-size:13px;
+    color:var(--ink-faint);
+  }
+  .hero-meta span:not(:last-child)::after{ content:"·"; margin-left:14px; color:var(--rule); }
+
+  /* ---------- JUMP NAV ---------- */
+  .jump-nav{
+    position:sticky; top:0;
+    z-index:20;
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--rule);
+    padding:12px 0;
+    margin-bottom:8px;
+  }
+  .jump-nav .wrap-wide{
+    display:flex; gap:4px;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .jump-nav .wrap-wide::-webkit-scrollbar{ display:none; }
+  .jump-nav a{
+    font-family:var(--font-ui);
+    font-size:13px;
+    font-weight:500;
+    text-decoration:none;
+    color:var(--ink-soft);
+    padding:6px 12px;
+    border-radius:100px;
+    white-space:nowrap;
+    flex:0 0 auto;
+  }
+  .jump-nav a:hover{ background:var(--bg-sunken); color:var(--ink); }
+
+  /* ---------- GENERIC SECTION ---------- */
+  section{ padding:44px 0; }
+  section h2{
+    font-size:26px;
+    font-weight:700;
+    margin-bottom:16px;
+  }
+  section p{ margin:0 0 16px; color:var(--ink); }
+  section p:last-child{ margin-bottom:0; }
+  .lede{
+    font-family:var(--font-display);
+    font-size:19px;
+    color:var(--ink-soft);
+    margin-bottom:18px;
+  }
+
+  /* ---------- JORNADA (four scenes) ---------- */
+  .jornada{ position:relative; padding-top:8px; }
+  .jornada-intro{ padding-bottom:8px; }
+  .jornada-path{ position:relative; }
+  .jornada-path::before{
+    content:"";
+    position:absolute;
+    left:23px; top:8px; bottom:8px;
+    width:2px;
+    background:linear-gradient(to bottom, var(--scene1), var(--scene2), var(--scene3), var(--scene4));
+    opacity:.55;
+  }
+  .cena{
+    position:relative;
+    padding:34px 0 34px 62px;
+    border-bottom:1px solid var(--rule);
+  }
+  .cena:last-child{ border-bottom:none; }
+  .cena-marker{
+    position:absolute;
+    left:0; top:36px;
+    width:48px; height:48px;
+    border-radius:50%;
+    background:var(--bg);
+    border:2px solid var(--scene-color);
+    color:var(--scene-color);
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:17px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .cena .eyebrow{ color:var(--scene-color); }
+  .cena h2{ font-size:23px; margin-bottom:14px; }
+  .cena blockquote{
+    margin:0 0 18px;
+    padding:14px 18px;
+    background:var(--bg-raised);
+    border-left:3px solid var(--scene-color);
+    border-radius:2px;
+    font-family:var(--font-display);
+    font-style:italic;
+    font-size:16.5px;
+    color:var(--ink);
+    box-shadow:var(--shadow);
+  }
+  .cena blockquote cite{
+    display:block;
+    margin-top:8px;
+    font-family:var(--font-ui);
+    font-style:normal;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.04em;
+    color:var(--ink-faint);
+  }
+  .cena .source-note{
+    font-family:var(--font-ui);
+    font-size:13.5px;
+    color:var(--ink-soft);
+    background:var(--bg-sunken);
+    border-radius:8px;
+    padding:12px 14px;
+    margin-top:6px;
+  }
+  .cena .source-note b{ color:var(--ink); }
+  .cena .greek-note{
+    font-family:var(--font-ui);
+    font-size:13.5px;
+    color:var(--ink-soft);
+    background:var(--bg-sunken);
+    border-radius:8px;
+    padding:14px 16px;
+    margin:6px 0 18px;
+    line-height:1.6;
+  }
+  .cena .greek-note b{ color:var(--scene-color); font-weight:600; }
+  .movement{
+    font-family:var(--font-ui);
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--scene-color);
+    margin:26px 0 10px;
+    padding-top:14px;
+    border-top:1px solid var(--rule);
+  }
+  .cena > .movement:first-of-type{ border-top:none; padding-top:0; margin-top:6px; }
+  .citation-block{
+    background:var(--bg-sunken);
+    border-left:2px solid var(--rule);
+    border-radius:2px;
+    padding:14px 18px;
+    margin:0 0 18px;
+    font-size:15.5px;
+    color:var(--ink-soft);
+    line-height:1.6;
+  }
+  .citation-block cite{
+    display:block;
+    margin-top:8px;
+    font-family:var(--font-ui);
+    font-style:normal;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.03em;
+    color:var(--ink-faint);
+  }
+  .obs-note{
+    background:color-mix(in srgb, var(--scene-color) 10%, var(--bg-raised));
+    border:1px dashed var(--scene-color);
+    border-radius:10px;
+    padding:14px 16px;
+    margin:0 0 18px;
+    font-family:var(--font-ui);
+    font-size:14px;
+    line-height:1.6;
+    color:var(--ink-soft);
+  }
+  .obs-note b{
+    display:block;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--scene-color);
+    margin-bottom:6px;
+  }
+  .obs-note a{ color:var(--scene-color); }
+  .scene-gloss{
+    font-family:var(--font-display);
+    font-style:italic;
+    font-size:15px;
+    color:var(--ink-soft);
+    margin:-6px 0 20px;
+  }
+
+  /* ---------- SÍNTESE ---------- */
+  .sintese-box{
+    background:var(--bg-raised);
+    border:1px solid var(--rule);
+    border-radius:14px;
+    padding:26px 26px;
+    box-shadow:var(--shadow);
+  }
+  .bailey-q{
+    font-family:var(--font-display);
+    font-style:italic;
+    font-size:19px;
+    text-align:center;
+    color:var(--accent);
+    padding:20px 10px;
+    margin:22px 0;
+  }
+
+  /* ---------- LITURGIA ---------- */
+  .liturgia{
+    background:var(--bg-sunken);
+    border-radius:16px;
+    padding:8px 32px 32px;
+    margin-bottom:8px;
+  }
+  .lit-block{ padding:22px 0; border-bottom:1px solid var(--rule); }
+  .lit-block:last-child{ border-bottom:none; }
+  .lit-block .eyebrow{ margin-bottom:8px; }
+  .lit-block p{ font-family:var(--font-display); font-size:17px; }
+
+  /* ---------- QUIZ ---------- */
+  .quiz-section{
+    background:var(--bg-sunken);
+    border-top:1px solid var(--rule);
+    padding:56px 0 72px;
+  }
+  .quiz-head{ text-align:left; margin-bottom:24px; }
+  .quiz-head h2{ font-size:28px; margin-bottom:10px; }
+  .quiz-card{
+    background:var(--bg-raised);
+    border:1px solid var(--rule);
+    border-radius:16px;
+    padding:28px;
+    box-shadow:var(--shadow);
+  }
+  .quiz-progress-row{
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:var(--font-ui); font-size:12.5px; font-weight:600;
+    color:var(--ink-faint); letter-spacing:.04em; text-transform:uppercase;
+    margin-bottom:10px;
+  }
+  .quiz-progress-track{
+    height:6px; border-radius:100px; background:var(--bg-sunken);
+    overflow:hidden; margin-bottom:22px;
+  }
+  .quiz-progress-fill{
+    height:100%; background:var(--accent); border-radius:100px;
+    transition:width .35s ease;
+  }
+  .quiz-q-tag{
+    font-family:var(--font-ui); font-size:12px; font-weight:600;
+    color:var(--scene-color, var(--accent)); letter-spacing:.06em; text-transform:uppercase;
+    margin-bottom:8px;
+  }
+  .quiz-question{
+    font-family:var(--font-display); font-size:20px; font-weight:600;
+    line-height:1.4; margin-bottom:20px;
+  }
+  .quiz-options{ display:flex; flex-direction:column; gap:10px; margin-bottom:6px; }
+  .quiz-option{
+    font-family:var(--font-body); font-size:15.5px; text-align:left;
+    background:var(--bg); border:1.5px solid var(--rule); border-radius:10px;
+    padding:13px 16px; cursor:pointer; color:var(--ink);
+    display:flex; gap:10px; align-items:flex-start;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .quiz-option:hover:not(:disabled){ border-color:var(--scene-color, var(--accent)); }
+  .quiz-option:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .quiz-option .letter{
+    font-family:var(--font-ui); font-weight:700; font-size:13px;
+    color:var(--ink-faint); flex:0 0 auto;
+  }
+  .quiz-option.correct{ border-color:var(--ok); background:color-mix(in srgb, var(--ok) 14%, var(--bg)); }
+  .quiz-option.correct .letter{ color:var(--ok); }
+  .quiz-option.wrong{ border-color:var(--bad); background:color-mix(in srgb, var(--bad) 12%, var(--bg)); }
+  .quiz-option.wrong .letter{ color:var(--bad); }
+  .quiz-option:disabled{ cursor:default; }
+
+  .quiz-feedback{
+    display:none;
+    margin-top:18px;
+    padding:14px 16px;
+    border-radius:10px;
+    font-size:15px;
+    line-height:1.55;
+  }
+  .quiz-feedback.show{ display:block; }
+  .quiz-feedback.ok{ background:color-mix(in srgb, var(--ok) 14%, var(--bg-raised)); border:1px solid var(--ok); }
+  .quiz-feedback.bad{ background:color-mix(in srgb, var(--bad) 12%, var(--bg-raised)); border:1px solid var(--bad); }
+  .quiz-feedback strong{ display:block; margin-bottom:4px; font-family:var(--font-ui); font-size:13px; letter-spacing:.03em; text-transform:uppercase; }
+
+  .quiz-footer-row{
+    display:flex; justify-content:flex-end; margin-top:22px;
+  }
+  .btn{
+    font-family:var(--font-ui); font-weight:600; font-size:14.5px;
+    background:var(--accent); color:var(--accent-ink);
+    border:none; border-radius:100px; padding:11px 24px;
+    cursor:pointer;
+  }
+  .btn:disabled{ opacity:.4; cursor:default; }
+  .btn.ghost{
+    background:transparent; color:var(--ink); border:1.5px solid var(--rule);
+  }
+
+  .quiz-result{ text-align:center; padding:12px 6px; }
+  .quiz-result .score{
+    font-family:var(--font-display); font-weight:700;
+    font-size:52px; color:var(--accent); line-height:1;
+    margin-bottom:10px;
+  }
+  .quiz-result .score-label{
+    font-family:var(--font-ui); font-size:13px; color:var(--ink-faint);
+    text-transform:uppercase; letter-spacing:.06em; margin-bottom:20px;
+  }
+  .quiz-result p{ max-width:480px; margin:0 auto 22px; }
+  .quiz-result .btn-row{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+
+  /* ---------- REFERÊNCIAS ---------- */
+  .refs-group{ margin-bottom:28px; }
+  .refs-group:last-child{ margin-bottom:0; }
+  .refs-group h3{
+    font-family:var(--font-ui);
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    margin-bottom:12px;
+  }
+  .refs-list{
+    list-style:none;
+    margin:0; padding:0;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .refs-list li{
+    font-size:15px;
+    line-height:1.55;
+    color:var(--ink-soft);
+    padding-left:0;
+  }
+  .refs-list li b{ color:var(--ink); font-weight:600; }
+  .refs-note{
+    font-family:var(--font-ui);
+    font-size:13px;
+    color:var(--ink-faint);
+    line-height:1.6;
+  }
+
+  footer{
+    padding:34px 0 60px;
+    text-align:center;
+    font-family:var(--font-ui);
+    font-size:12.5px;
+    color:var(--ink-faint);
+    letter-spacing:.03em;
+  }
+
+  @media (max-width:520px){
+    body{ font-size:16px; }
+    .hero{ padding:44px 0 32px; }
+    .liturgia{ padding:8px 20px 26px; }
+    .quiz-card{ padding:20px; }
+    .quiz-result .score{ font-size:44px; }
+  }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Escola Bíblica · Estudos Expositivos</p>
+    <h1>A Grande Inversão do Reino</h1>
+    <p class="verse-ref">Análise textual e exegética de Mateus 20.1–34</p>
+    <div class="pillars">
+      <span class="pillar-tag" style="background:var(--scene1)">Graça</span>
+      <span class="pillar-tag" style="background:var(--scene2)">Cruz</span>
+      <span class="pillar-tag" style="background:var(--scene3)">Serviço</span>
+      <span class="pillar-tag" style="background:var(--scene4)">Compaixão</span>
+    </div>
+    <p class="thesis">O Rei que se aproxima de Jerusalém para morrer revela, em quatro movimentos sucessivos, a grande inversão do Seu Reino: a graça que rejeita o mérito, a cruz que precede a glória, o serviço que redefine o critério de grandeza e a compaixão que enxerga o desprezado.</p>
+    <div class="hero-meta">
+      <span>Arisvaldo Marinho Cunha</span>
+      <span>20 de setembro de 2026</span>
+      <span>Leitura de aproximadamente 25 minutos</span>
+    </div>
+  </div>
+</header>
+
+<nav class="jump-nav">
+  <div class="wrap-wide">
+    <a href="#intro">Introdução</a>
+    <a href="#cena-1">Cena I · A Vinha</a>
+    <a href="#cena-2">Cena II · A Predição</a>
+    <a href="#cena-3">Cena III · O Pedido</a>
+    <a href="#cena-4">Cena IV · Os Cegos</a>
+    <a href="#sintese">Síntese</a>
+    <a href="#referencias">Referências</a>
+    <a href="#quiz">Quiz</a>
+  </div>
+</nav>
+
+<main>
+  <section id="intro" class="wrap">
+    <h2>Uma multidão a caminho da cruz</h2>
+    <p class="lede">Mateus 20 não é um apêndice solto entre a bênção às crianças (19.13–15) e a entrada triunfal em Jerusalém (21.1–11): é a continuação direta e necessária da pergunta que Pedro fez a Jesus em 19.27, "Qual será nossa recompensa?", e da resposta que a encerrou em 19.30, "muitos primeiros serão os últimos, e muitos últimos serão os primeiros".</p>
+    <p>Uma multidão de peregrinos galileus atravessa a Pereia, cruza o Jordão e sobe por Jericó rumo a Jerusalém, para a Páscoa. No meio dela, Jesus caminha com os Doze em direção à cruz que já anunciou duas vezes (16.21; 17.22,23) e que anunciará pela terceira vez, com detalhes inéditos, no interior deste mesmo capítulo.</p>
+    <p><b>Método desta aula:</b> para que o estudo cumpra, ao mesmo tempo, o rigor exegético e a função didática que lhe cabem, cada uma das quatro cenas será examinada em quatro movimentos sucessivos, sempre na mesma ordem: o contexto histórico e cultural que torna o texto compreensível ao ouvinte original; a observação exegética do que o texto efetivamente diz; a teologia bíblica que o texto revela, à luz do restante do cânon; e a aplicação pastoral que o texto exige de quem o recebe hoje. Esses quatro movimentos não são um exercício acadêmico à parte da fé: são o próprio caminho pelo qual a Igreja sempre leu as Escrituras com proveito, desde a patrística até aos reformadores, dos puritanos aos expositores do nosso tempo.</p>
+    <p>A tese que perpassa as quatro cenas deste capítulo pode ser assim resumida: o Rei que se aproxima de Jerusalém para morrer revela, em quatro movimentos sucessivos, a grande inversão do seu Reino: a graça que rejeita o mérito, a cruz que precede a glória, o serviço que redefine o critério de grandeza e a compaixão que enxerga o desprezado. Quem compreende essa inversão deixa de contar méritos, de disputar lugares e de calar quem clama, e passa, enfim, a seguir.</p>
+    <p>Essa inversão, porém, não é um conjunto de máximas morais soltas. As quatro cenas se articulam pela revelação dos valores do Reino e pelo caminho de Jesus para a cruz, embora cada uma desenvolva uma contribuição própria: a parábola da vinha revela a generosidade divina e confronta a pretensão de converter o serviço em mérito que torne Deus devedor; a predição da paixão anuncia o sofrimento, a morte e a ressurreição do Filho do Homem; o pedido dos filhos de Zebedeu conduz ao ensino sobre a grandeza que se expressa no serviço e encontra seu fundamento na entrega de Jesus em resgate por muitos; e a cura dos dois cegos manifesta sua compaixão e culmina no seguimento. Reconhecer esse fio teológico permite ler o capítulo como uma unidade, sem apagar as particularidades de cada passagem.</p>
+    <p>A parábola dos trabalhadores da vinha (20.1–16) ilustra em termos econômicos o que 19.30 já havia anunciado em termos de posição. A terceira predição da paixão (20.17–19) é o eixo silencioso que sustenta todo o capítulo: não há denário gratuito, nem resgate por muitos, sem que o Filho do Homem suba a Jerusalém para morrer. O pedido da mãe dos filhos de Zebedeu (20.20–28) mostra que a mesma doença do mérito, expulsa pela porta da parábola, insiste em voltar pela janela da ambição espiritual. E a cura dos dois cegos de Jericó (20.29–34) fecha a seção com uma imagem concreta de tudo o que foi ensinado: o desprezado que persiste no clamor é quem primeiro enxerga, e enxergar, aqui, termina sempre em seguir.</p>
+  </section>
+
+  <section class="jornada">
+    <div class="wrap jornada-intro">
+      <h2>As quatro cenas da inversão</h2>
+      <p>Cada cena é examinada em quatro movimentos sucessivos, sempre na mesma ordem: o contexto histórico e cultural, a observação exegética do texto, a teologia bíblica que ele revela e a aplicação pastoral que exige de quem o recebe hoje.</p>
+    </div>
+
+    <div class="wrap jornada-path">
+
+      <article class="cena" id="cena-1" style="--scene-color:var(--scene1)">
+        <div class="cena-marker">I</div>
+        <p class="eyebrow">Cena I · Mateus 20.1–16</p>
+        <h2>A parábola da vinha: a Graça que rejeita o mérito</h2>
+        <blockquote>"Pegue seu dinheiro e vá. Eu quis pagar ao último trabalhador o mesmo que paguei a você. É contra a lei eu fazer o que quero com o meu dinheiro? Ou você está com inveja porque fui bondoso com os outros? Assim, os últimos serão os primeiros, e os primeiros serão os últimos."<cite>Mateus 20.14–16</cite></blockquote>
+
+        <div class="obs-note"><b>Observação textual</b>O versículo 15, conforme a ARA, apresenta a seguinte expressão: "[...] Ou são maus os teus olhos porque eu sou bom?"</div>
+
+        <p class="movement">Contexto histórico e cultural</p>
+        <p>A parábola apresenta trabalhadores reunidos na praça, à espera de contratação para o dia. Esses diaristas pertenciam a uma camada particularmente vulnerável da força de trabalho agrícola: dependiam de oportunidades que não estavam garantidas e precisavam conciliar o sustento da família com despesas, impostos e, frequentemente, dívidas. O denário aparece na narrativa como a remuneração acordada por uma jornada. Seu poder de compra não deve ser reduzido a uma equivalência fixa com um único dia de alimentação: Culpepper reúne estimativas segundo as quais poderia adquirir alimentos para uma família por vários dias, embora parte da renda tivesse outros destinos obrigatórios. A precariedade decorria, portanto, também da irregularidade do trabalho e das obrigações que consumiam os ganhos. A exigência de pagamento antes do pôr do sol protegia justamente quem dependia dessa remuneração (Lv 19.13; Dt 24.14,15). A vindima constitui um cenário provável para essa contratação de trabalhadores, pois a colheita e o processamento das uvas exigiam concentração de mão de obra e rapidez. A narrativa, contudo, não identifica expressamente a tarefa realizada nem explica por que o proprietário retorna tantas vezes à praça. O que o texto destaca é sua iniciativa reiterada de contratar e a situação dos últimos trabalhadores, que permaneciam disponíveis porque ninguém os havia contratado (v. 7).</p>
+
+        <div class="citation-block">"O foco principal desta história é a incrível compaixão e graça do empregador, e não os empregados."<cite>BAILEY, Kenneth E. Jesus pela ótica do Oriente Médio: estudos culturais sobre os Evangelhos. São Paulo: Vida Nova, p. 357.</cite></div>
+
+        <p>A centralidade do proprietário não torna secundária a resposta dos trabalhadores para a compreensão da parábola. Sua generosidade revela o caráter daquele que concede; a reclamação dos primeiros contratados expõe a dificuldade de acolher essa generosidade quando ela beneficia outros. Como destaca Michelle Lee-Barnewall, a narrativa conduz o ouvinte a examinar sua própria reação: reconhecer a bondade do senhor ou ressentir-se de que os últimos tenham recebido tanto quanto os primeiros.</p>
+        <p>É por essa razão que Kenneth E. Bailey prefere renomear esta história de Parábola do Empregador Compassivo, e não Parábola dos Trabalhadores na Vinha, pelo mesmo motivo que prefere chamar a parábola de Lucas 15 de Parábola do Pai, e não do Filho Pródigo: o centro dramático da história está em quem dá, não em quem recebe. Bailey, que viveu décadas no Oriente Médio, relata ter testemunhado pessoalmente a sobrevivência desse costume: observou, junto à Porta de Damasco, em Jerusalém oriental, trabalhadores palestinos desempregados reunidos toda manhã à espera de que uma van de empregadores os escolhesse, correndo para a rua na esperança de serem um dos selecionados. Esse relato de observação direta dá peso concreto ao que o texto grego apenas sugere: a praça do mercado não era um lugar neutro, era um lugar de exposição e vergonha pública, e é exatamente aí que o proprietário da parábola escolhe aparecer, sozinho, por cinco vezes num único dia.</p>
+
+        <p class="movement">Observação exegética</p>
+        <p>É sobre esse ponto, mais que sobre qualquer outro, que a parábola pede exame: o Reino dos céus não opera por convenção comercial, mas por graça soberana, e a graça soberana não se deixa medir pela régua do mérito. Os trabalhadores da primeira hora não foram lesados; receberam exatamente o que combinaram (v. 13). O problema não está na justiça do proprietário, mas no "olho mau" (v. 15) de quem, tendo recebido tudo o que lhe era devido, ainda assim se ressente da generosidade alheia. "Olho mau" era expressão idiomática corrente para "olho ganancioso" (cf. Pv 28.22); reclamar publicamente de ter recebido exatamente o combinado, diante de quem fora generoso com os outros, seria visto pela sociedade do tempo como grosseria e ingratidão, um comportamento vergonhoso, não uma reivindicação legítima de direitos.</p>
+        <p>A essa observação, Kenneth E. Bailey acrescenta uma camada estrutural que reforça a mesma conclusão. Segundo ele, a parábola segue o modelo retórico profético hebraico de sete estrofes em composição circular, no qual as três primeiras estrofes correspondem, de forma invertida, às três últimas, e o centro concentra o clímax da narrativa. É exatamente no centro, na quarta estrofe, que surgem três surpresas: primeiro, um administrador entra em cena, embora o próprio proprietário tivesse feito pessoalmente todas as idas ao mercado; segundo, o senhor ordena que se pague a todos o salário integral de um dia; terceiro, ele inverte deliberadamente a ordem do pagamento, fazendo com que os últimos contratados recebessem primeiro, precisamente para que os da primeira hora testemunhassem, com os próprios olhos, a graça estendida aos demais antes de saberem quanto receberiam eles mesmos. Essa arquitetura retórica não é ornamento literário: é o próprio texto ensinando, em sua forma, o que ensina em seu conteúdo, a saber, que a graça só se compreende quando é vista em ato.</p>
+
+        <p class="movement">Correlação bíblica</p>
+        <p>No contexto imediato de Mateus, a parábola responde à pergunta de Pedro sobre o que receberiam aqueles que haviam deixado tudo para seguir Jesus (19.27) e desenvolve a advertência acerca dos primeiros e dos últimos (19.30). Esse vínculo oferece o ponto de partida mais seguro para sua interpretação: os discípulos são chamados a confiar na generosidade de Deus sem transformar a precedência no chamado em reivindicação de superioridade. Sobre a identidade dos trabalhadores tardios, portanto, há duas camadas de leitura que precisam ser distinguidas com cuidado. Há uma aplicação histórica original, bem identificada pela tradição homilética: um aviso aos próprios Doze, que haviam entrado cedo no movimento de Jesus e não deveriam exigir honra especial por isso quando outros viessem depois; e, mais amplamente, um aviso aos judeus, que sabiam ser o povo eleito e tendiam a desprezar os gentios, de que o Reino não conhece "cláusula de nação mais favorecida". Essa camada histórica é legítima e não deve ser descartada. Mas ela não equivale a uma chave alegórica fixa, que mapeasse cada grupo de trabalhadores a uma entidade específica: o texto não distingue judeus e gentios em nenhum detalhe da narrativa, e o ponto da parábola não se estreita a nenhum grupo histórico, mas se abre à condição de qualquer discípulo, em qualquer época, que ainda meça o Reino pela lógica do salário merecido.</p>
+        <p>Kenneth E. Bailey identifica ainda uma terceira camada de leitura, quase ausente dos comentários em língua portuguesa: durante séculos, os trabalhadores queixosos foram identificados com os fariseus, que haviam passado a vida guardando a Lei com precisão e agora viam Jesus igualar, no Reino, os que nunca a haviam observado. Bailey sugere, ainda, uma aplicação mais desconfortável e mais próxima do contexto imediato de Mateus 20: os próprios discípulos, que creram em Jesus desde o início, ressentem, nas duas cenas seguintes deste mesmo capítulo, que outros recebam o mesmo lugar que eles. A pergunta que ele formula é direta: Pedro, Tiago e João são iguais, no Reino de Deus, ao mendigo cego da estrada de Jericó? A resposta do texto, como se verá adiante nas seções IV e V desta aula, é afirmativa, e essa é precisamente a inversão que o capítulo inteiro se propõe a ensinar. Nenhuma dessas camadas de leitura anula as demais; todas convergem, por caminhos diferentes, para o mesmo eixo: a graça concedida por Cristo não reconhece precedência de tempo, de mérito nem de proximidade.</p>
+
+        <div class="citation-block">"O princípio no mundo é que quem trabalha mais tempo recebe pagamento maior. Isso é justo. Mas no reino de Deus os princípios de mérito e habilidade podem ser deixados de lado para que a graça prevaleça."<cite>KISTEMAKER, apud CARSON, D. A. O Comentário de Mateus, p. 500.</cite></div>
+        <div class="citation-block">"O chamado para o trabalho, a capacidade e a recompensa são todos com base em um princípio de graça, e não de mérito."<cite>SPURGEON, C. H., apud LOPES, Hernandes Dias. Mateus: Jesus, o Rei dos reis, pp. 619-620.</cite></div>
+
+        <p class="movement">Teologia bíblica</p>
+        <p>A parábola revela a graça que rejeita o mérito entendido como pretensão de colocar Deus em dívida com o ser humano. Isso não elimina a realidade do serviço nem as promessas de recompensa, presentes no próprio contexto (19.28-29); mostra que a generosidade divina não pode ser submetida à comparação pela qual alguém exige receber mais porque outro recebeu muito. A narrativa não avalia o amor ou a qualidade do trabalho de cada grupo, nem condena o acordo estabelecido no início do dia. O próprio proprietário invoca esse acordo para demonstrar que não praticou injustiça (20.13). A censura recai sobre o ressentimento diante de sua bondade. Assim, o discípulo é chamado a servir com fidelidade e a confiar no Senhor quanto à recompensa, reconhecendo que nem seu trabalho nem sua antiguidade lhe conferem autoridade para limitar a graça concedida ao próximo.</p>
+        <p>Essa generosidade, porém, não nasce do nada: custa ao próprio senhor. Kenneth E. Bailey observa que nenhum proprietário rural da época faria, em pessoa, cinco viagens num único dia entre a propriedade e o mercado: esse era, precisamente, o trabalho do administrador, que só aparece na história perto do fim. O senhor da parábola insiste em ir ele mesmo, seguidas vezes, sob o calor do dia, e é essa insistência, mais do que qualquer palavra do texto, que revela a natureza do seu amor. A parábola já anuncia, em miniatura, o movimento maior que todo o capítulo 20 descreve: o Rei que se aproxima de Jerusalém para morrer é o mesmo Senhor que se recusa a delegar a outros a tarefa de buscar quem precisa dele.</p>
+
+        <div class="citation-block">"Contra as expectativas de sua classe, o senhor nesta parábola não fica indiferente. Sua compaixão o leva a prejudicar a si mesmo e, assim, encarnar sua profunda preocupação conforme ele demonstra caro amor aos 'pobres'. Jesus está falando de seu próprio ministério. Belém e Jerusalém se dão as mãos. Encarnação e expiação se beijam. A autoentrega assume a forma de ofertas de um amor precioso."<cite>BAILEY, Kenneth E. Jesus pela ótica do Oriente Médio: estudos culturais sobre os Evangelhos. São Paulo: Vida Nova, p. 364.</cite></div>
+
+        <p>Antes de passar adiante, cabe ainda uma precaução doutrinária, formulada já pelos primeiros expositores protestantes desta parábola: nada nela autoriza supor que a salvação possa, em qualquer sentido, ser obtida mediante boas obras. Tudo o que um crente recebe no mundo vindouro é por graça, e não por dívida; Deus jamais está em débito com ninguém, ainda que tenhamos feito tudo o que nos competia (Lc 17.10). A verdadeira fé em Cristo, ainda que tenha apenas um dia de existência, já justifica o crente diante de Deus tão completamente quanto a fé de quem o segue há cinquenta anos.</p>
+
+        <div class="citation-block">"O evangelho oferece o perdão e a paz com Deus por meio de Jesus Cristo, aos pagãos, hoje, tanto quanto ao apóstolo Paulo, em sua época. [...] A justiça com que Timóteo se apresentará, no dia do juízo, é a mesma com que se apresentará aquele ladrão que morreu na cruz ao lado de Jesus. Ambos serão salvos exclusivamente pela graça, ambos deverão tudo a Cristo. Nós podemos não gostar disso, mas assim é a doutrina ensinada nessa parábola; e não somente nesta parábola, mas em todo o Novo Testamento. Feliz é quem recebe esta doutrina com humildade no coração! Com razão comentou o bispo Hall: 'Se alguns têm motivos para magnificar a generosidade de Deus, ninguém tem, por isso, motivos para queixar-se'."<cite>RYLE, J. C. Meditações no Evangelho de Mateus, pp. 164-165.</cite></div>
+
+        <p>Há, ainda, um aspecto decisivo no encerramento da história: Jesus não informa como os trabalhadores responderam às últimas palavras do proprietário. Permaneceram ressentidos ou reconheceram sua generosidade? Lee-Barnewall chama atenção para essa abertura, pela qual o ouvinte é convidado a examinar a própria resposta. A pergunta sobre o "olho mau" (ou "você está com inveja", NVT) deixa de atingir apenas os personagens e alcança quem escuta a parábola: somos capazes de alegrar-nos com a bondade que não podemos controlar nem distribuir segundo nossas preferências?</p>
+
+        <p class="movement">Aplicação pastoral</p>
+        <p>Toda vez que o coração cristão volta a contar horas de trabalho e a comparar recompensas, ele está, sem perceber, de volta à praça dos diaristas, tentando negociar com Deus o que só pode ser recebido de mãos abertas. A pergunta que a parábola devolve ao leitor não é "quanto eu mereço", mas "posso alegrar-me com a generosidade que Deus tem para com o outro".</p>
+        <p>Essa resposta também assume uma forma concreta. Receber a graça e alegrar-se com ela deve ampliar nossa disposição de atender às necessidades do próximo. Willard destaca que a generosidade do proprietário alcança trabalhadores cuja vida depende da oportunidade de obter sustento. Como aplicação à comunidade cristã, a parábola nos convida a perceber quem espera por ajuda, trabalho ou acolhimento e a agir com generosidade, inclusive quando não haverá retribuição. A graça que recebemos forma em nós a disposição de servir que Jesus desenvolverá adiante neste capítulo.</p>
+      </article>
+
+      <article class="cena" id="cena-2" style="--scene-color:var(--scene2)">
+        <div class="cena-marker">II</div>
+        <p class="eyebrow">Cena II · Mateus 20.17–19</p>
+        <h2>A terceira predição da paixão: a Glória que passa pela cruz</h2>
+        <blockquote>"Ouçam, estamos subindo para Jerusalém, onde o Filho do Homem será traído e entregue aos principais sacerdotes e aos mestres da lei. Eles o condenarão à morte e o entregarão aos gentios, para que zombem dele, o açoitem e o crucifiquem. No terceiro dia, porém, ele ressuscitará."<cite>Mateus 20.18–19</cite></blockquote>
+
+        <p class="movement">Contexto histórico e cultural</p>
+        <p>A subida a Jerusalém conduz Jesus ao centro religioso em que se desenvolverão os acontecimentos anunciados. Ao tomar os Doze à parte, ele os prepara para compreender o destino que os espera na cidade. A predição distingue a atuação dos principais sacerdotes e escribas, que o condenarão, da atuação dos gentios, aos quais será entregue para sofrer zombaria, açoites e crucifixão. Essa sequência situa o anúncio no encontro entre a liderança religiosa de Jerusalém e o poder romano, cuja participação será explicitada na narrativa da paixão (Mt 26–27). A caminhada para a cidade torna-se, assim, ocasião de ensino sobre o caminho que o Messias percorrerá.</p>
+
+        <p class="movement">Observação exegética</p>
+        <p>Esta é a terceira predição da paixão em Mateus, depois de 16.21 e 17.22,23, e a mais detalhada das três. Jesus já não fala apenas em "ser morto": agora nomeia os agentes (chefes dos sacerdotes e mestres da lei), o veredito (condenação à morte), a entrega aos gentios, a forma exata do sofrimento (zombaria, açoites, crucifixão) e o desfecho (ressurreição ao terceiro dia). A precisão cresce à medida que Jerusalém se aproxima geograficamente, e o leitor que já conhece o desfecho da história reconhece, verso por verso, o cumprimento que virá.</p>
+        <div class="greek-note"><b>A escalada no vocabulário grego:</b> essa precisão crescente não é apenas quantitativa, é também qualitativa, e a mudança fica visível no próprio vocabulário grego que Mateus escolhe. Na primeira predição (16.21), o verbo decisivo é <i>dei</i>, um impessoal de necessidade ("é necessário"), sem qualquer verbo de entrega: a cruz pertence ao plano soberano de Deus antes de qualquer agente humano ser nomeado. Na segunda predição (17.22-23), surge pela primeira vez o verbo <i>paradidomi</i> ("entregar"), ainda de forma genérica, "nas mãos dos homens", um agente sem nome nem função. Na terceira predição (20.18-19), o mesmo verbo <i>paradidomi</i> aparece duas vezes, e agora com nome e função jurídica precisos: uma primeira entrega aos principais sacerdotes e escribas, que julgam e condenam, e uma segunda entrega destes aos gentios, que executam a sentença, uma verdadeira cadeia de custódia em dois atos, do Sinédrio para Roma. É o mesmo verbo, <i>paradidomi</i>, que o evangelho reserva para a traição de Judas (26.25), de modo que a terceira predição já antecipa, em sua própria gramática, o mecanismo humano que tornará possível o cumprimento da necessidade divina anunciada na primeira.</div>
+        <p>Vale demorar-se sobre a extensão desse sofrimento anunciado, porque o texto o descreve em camadas sucessivas, e cada uma delas atinge uma dimensão distinta da pessoa de Jesus: ele seria entregue às mãos dos próprios chefes religiosos, ferida do coração traído pela deslealdade; seria condenado, ferida da injustiça; seria escarnecido pelos gentios, ferida da humilhação deliberada; seria açoitado, ferida do corpo; e seria crucificado, ferida da própria morte. É como se, nesta terceira predição, Jesus caminhasse deliberadamente ao encontro de todo o tipo de sofrimento, físico, emocional e espiritual, que o mundo tinha para lhe infligir, e ainda assim a frase não termina em derrota: termina na afirmação serena da ressurreição ao terceiro dia. Além da cortina do sofrimento estava a revelação da glória; além da cruz, a coroa.</p>
+
+        <p class="movement">Teologia bíblica</p>
+        <p>Esse anúncio funciona como eixo teológico de todo o capítulo, ainda que ocupe apenas três versículos: não há denário de graça, nem trono à direita do Rei, nem resgate por muitos, que não passem por este caminho de rejeição e morte. A glória do Reino, que os discípulos tanto desejam nas duas cenas seguintes, só existe do outro lado da cruz, nunca ao largo dela. O conhecimento prévio de tudo o que o aguardava, longe de abater Jesus, revela antes um sofredor voluntário: "Eu não fui rebelde, não me retraí. Ofereci as costas aos que me feriam, e as faces aos que me arrancavam os cabelos; não escondi o meu rosto dos que me afrontavam e me cuspiam" (Is 50.5-6, na citação de Ryle). Durante toda a sua vida pública Jesus contemplou o Calvário à distância, e ainda assim caminhou até ele sem desviar-se nem para a direita nem para a esquerda.</p>
+        <p>É digno de nota que Mateus registre a predição sem qualquer reação dos Doze, ao contrário de Lucas, que explicita a incompreensão deles (Lc 18.34). Em Mateus, essa incompreensão não é declarada, é demonstrada: o pedido da mãe dos filhos de Zebedeu, que vem logo em seguida, é a prova viva de que a mensagem da cruz ainda não havia penetrado o coração de nenhum dos que a ouviram.</p>
+
+        <p class="movement">Aplicação pastoral</p>
+        <p>O conhecimento prévio do sofrimento agrava a angústia de quem o espera, como sabe qualquer pessoa à beira de um procedimento doloroso. Contemplar a determinação serena de Jesus, que sabia exatamente o que o aguardava e ainda assim não recuou, é o antídoto mais eficaz contra a nossa própria tentação de negociar com Deus um caminho mais fácil do que aquele que ele mesmo escolheu para si.</p>
+      </article>
+
+      <article class="cena" id="cena-3" style="--scene-color:var(--scene3)">
+        <div class="cena-marker">III</div>
+        <p class="eyebrow">Cena III · Mateus 20.20–28</p>
+        <h2>O pedido dos filhos de Zebedeu: a grandeza que se mede pelo Serviço</h2>
+        <blockquote>"Entre vocês, porém, será diferente. Quem quiser ser o líder entre vocês, que seja servo, e quem quiser ser o primeiro entre vocês, que se torne escravo. Pois nem mesmo o Filho do Homem veio para ser servido, mas para servir e dar sua vida em resgate por muitos."<cite>Mateus 20.26–28</cite></blockquote>
+
+        <p class="movement">Contexto histórico e cultural</p>
+        <p>A intercessão por meio de uma mãe era, tanto em círculos judaicos quanto romanos, com frequência mais eficaz que a petição direta de um filho por si mesmo, o que explica a mediação da mãe dos filhos de Zebedeu. Há também a hipótese de que Tiago e João fossem primos de Jesus, construída pela comparação das listas de mulheres presentes na crucificação (Mt 27.56; Mc 15.40; Jo 19.25). Essa hipótese depende de identificar a mãe dos filhos de Zebedeu com Salomé e, posteriormente, com a irmã da mãe de Jesus mencionada em João; o parentesco, portanto, não é declarado expressamente pelos evangelistas. Caso essa identificação esteja correta, ela poderá ajudar a compreender a familiaridade do pedido. O argumento da passagem, contudo, não depende dela: Jesus confronta a busca por lugares de honra e ensina aos discípulos o significado da grandeza no Reino.</p>
+        <p>A mãe dos filhos de Zebedeu se aproxima de Jesus como quem se aproxima de um monarca oriental, prostrando-se antes mesmo de formular o pedido: que Tiago e João se assentem, um à direita e outro à esquerda, no Reino de Jesus. É um pedido literalmente ensurdecedor, vindo logo depois do anúncio da cruz: os dois discípulos, e provavelmente sua mãe através deles, ainda pensam em tronos quando Jesus acabou de falar em condenação, açoites e crucifixão.</p>
+
+        <p class="movement">Observação exegética</p>
+        <p>A resposta de Jesus não repreende o desejo de grandeza como tal, mas desloca inteiramente o seu critério. "Cálice", no vocabulário do Antigo Testamento, ora designa bênção (Sl 16.5; 23.5), ora designa juízo e sofrimento (Sl 75.8; Jr 25.15–29), por vezes na imagem específica do "cálice da ira" que os profetas atribuíam ao castigo divino; aqui, o contexto aponta claramente para o sofrimento que aguarda Jesus, e que os dois irmãos, com ingenuidade e coragem, se dizem prontos a compartilhar. Jesus confirma que de fato beberão desse cálice (Tiago seria o primeiro mártir apostólico, At 12.2; João, segundo a tradição mais forte, viveria até idade avançada em Éfeso, bebendo o cálice não no martírio repentino, mas na longa disciplina e luta de uma vida inteira de fidelidade), mas nega que a proximidade do sofrimento garanta os lugares de honra: esses "foram preparados por meu Pai" (v. 23), e não estão à disposição do próprio Jesus para negociação.</p>
+        <p>Uma antiga moeda romana trazia gravada a imagem de um boi diante de duas alternativas, um altar e um arado, com a inscrição "disposto para ambos". A imagem serve bem à ideia do cálice: não existe um único cálice para o cristão, feito só do sofrimento agudo do martírio; pode ser também o cálice mais longo e menos visível da fidelidade cotidiana, da disciplina, dos desapontamentos pequenos e repetidos ao longo de uma vida inteira de discipulado. Beber o cálice significa, em ambos os casos, seguir a Cristo aonde quer que ele leve.</p>
+        <p>O ponto culminante da perícope, e talvez de todo o capítulo, é o versículo 28: a grandeza no Reino não se mede por quantos servem a alguém, mas por quantos alguém serve. Onde os governantes das nações dominam e exercem poder sobre os súditos (v. 25), padrão que na Antiguidade se repetia da corte romana aos senhores orientais, o próprio Filho do Homem inverte a lógica, pois não veio para ser servido, mas para servir. A força dessa inversão está no contraste que o próprio Jesus estabelece com o exercício dominador da autoridade (v. 25). Na comunidade dos discípulos, a busca por grandeza deve assumir a forma de serviço, e a aspiração ao primeiro lugar deve conduzir à disposição de tornar-se servo de todos. Esse ensino recebe seu fundamento e sua expressão mais profunda na missão do próprio Filho do Homem, que entrega a vida em favor de muitos.</p>
+
+        <p class="movement">Teologia bíblica: o resgate por muitos</p>
+        <p>A expressão "dar a sua vida em resgate por muitos" ecoa, com grande probabilidade, o quarto cântico do Servo sofredor em Isaías 53: o termo "muitos" é central em Isaías 53.11–12, e a ideia de dar a vida em substituição corresponde ao "derramou a sua alma na morte" de Isaías 53.12. Há quem tenha lido o "por muitos" como sinal de uma expiação restrita a um grupo determinado; a leitura mais segura, e a que aqui se adota, é a de que "muitos" contrasta o Único que morre com a multidão que se beneficia de sua morte, sem fechar essa multidão a ninguém. Ler aqui uma doutrina de exclusão seria carregar a expressão além do que o contexto e o pano de fundo do profeta Isaías permitem.</p>
+
+        <div class="citation-block">"O Filho do homem veio para 'dar a sua vida em resgate por muitos'. [...] 'A vida de Jesus entregue em morte vicária realiza a libertação de vidas confiscadas. Ele agiu em favor de muitos ao tomar o lugar deles' [...] O termo 'muitos' enfatiza os incontáveis efeitos da morte solitária de Jesus: um morre, muitos encontram vida 'resgatada, curada, restaurada, perdoada', uma multidão que nenhum homem pode contar [...]."<cite>CARSON, D. A. O Comentário de Mateus, p. 505.</cite></div>
+
+        <p>Vale, ainda, uma advertência didática sobre esta mesma palavra "resgate". Ao longo da história da Igreja, alguns intérpretes se perguntaram, de forma literal demais, a quem exatamente esse resgate teria sido pago, e a pergunta produziu respostas que hoje reconhecemos como desvios: houve quem ensinasse que o resgate fora pago ao próprio diabo, o que colocaria o diabo em pé de igualdade com Deus, capaz de impor condições para libertar os homens; e a partir daí surgiram imagens ainda mais estranhas, como a de Deus enganando o diabo por meio da aparente fragilidade humana de Jesus, ou a da cruz como um anzol disfarçado de isca para fisgar o mal. Essas construções, por mais criativas que sejam, esquecem que "resgate" designa simplesmente aquilo que se entrega para libertar alguém de uma situação da qual não pode sair por seus próprios meios, sem que seja necessário identificar um destinatário do pagamento. O que o texto afirma, sem rodeios teológicos, é que os homens estavam presos pelo poder do pecado com grilhões que não podiam romper, e que reaproximar Deus dos homens custou a vida e a morte do próprio Filho de Deus.</p>
+
+        <div class="citation-block">"Ao longo de toda sua história os judeus tinham sonhado com o Messias, mas o Messias com que sonhavam era sempre um rei conquistador, um líder poderoso [...]. Esperavam um conquistador, mas receberam a alguém quebrantado em uma cruz. Esperavam o leão feroz de Judá, mas receberam o manso cordeiro de Deus." Rudolf Bultmann escreve: "Na cruz de Cristo se derrubam os critérios de julgamento judaicos e as ideias humanas de esplendor do Messias."<cite>BARCLAY, William. Mateus, p. 663.</cite></div>
+
+        <p>A morte de Cristo, portanto, não foi simplesmente a de um mártir exemplar ou de um mestre que morreu por suas convicções: foi sacrifício e expiação pelo pecado do homem, oferta de si mesmo que satisfez a justiça de Deus e nos resgatou da dívida que jamais poderíamos pagar por nós mesmos (Hb 9.14; 1 Pe 3.18). Quem não vê mais do que exemplaridade moral na cruz perde de vista a própria pedra fundamental do evangelho.</p>
+
+        <p class="movement">Aplicação pastoral</p>
+        <p>Entre a ambição dos filhos de Zebedeu e a indignação dos outros dez discípulos (v. 24), o texto expõe a mesma enfermidade em roupagens diferentes: todos, sem exceção, ainda pensam o Reino em termos de posição. O orgulho, disse um antigo comentarista, é a veste mais íntima que vestimos e a última de que nos despimos. A cura vem apenas de contemplar o próprio Rei, que, tendo todo o direito de ser servido, escolheu servir até a morte, e de perguntar, honestamente, a quantas pessoas cada um de nós já ajudou hoje.</p>
+
+        <div class="obs-note"><b>Observação</b>"O orgulho é a camisa da alma, que vestimos primeiro e tiramos por último", frase atribuída a George Swinnock, conforme artigo de Joel R. Beeke, disponível em <a href="https://www.christianstudylibrary.org/article/take-heed-your-attitude-ministry-fighting-pride?utm_source=chatgpt.com" target="_blank" rel="noopener">christianstudylibrary.org</a>.</div>
+      </article>
+
+      <article class="cena" id="cena-4" style="--scene-color:var(--scene4)">
+        <div class="cena-marker">IV</div>
+        <p class="eyebrow">Cena IV · Mateus 20.29–34</p>
+        <h2>Os dois cegos de Jericó: a Compaixão que acolhe o clamor e conduz ao seguimento</h2>
+        <p class="scene-gloss">Discipulado revelado no ato de seguir a Jesus</p>
+        <blockquote>"Ao ouvi-los, Jesus parou e perguntou: O que vocês querem que eu lhes faça? Eles responderam: Senhor, nós queremos enxergar! Jesus teve compaixão deles e tocou-lhes nos olhos. No mesmo instante, passaram a enxergar e o seguiram."<cite>Mateus 20.32–34</cite></blockquote>
+
+        <p class="movement">Contexto histórico e cultural</p>
+        <p>Jericó era uma das cidades mais ricas da Judeia, mas essa riqueza não mudava a situação de seus mendigos, que viviam à margem inferior da escala social. A ética judaica de trabalho era rigorosa a ponto de considerar mendicância aceitável apenas para os verdadeiramente incapacitados, como os cegos, que dependiam inteiramente da compaixão de quem passava. Jericó era, além disso, a última cidade no caminho de quem subia da Pereia para Jerusalém, e dali em diante a estrada sobe mais de mil metros até a capital. É nesse ponto, cercado por uma grande multidão de peregrinos, que dois cegos, sentados à beira do caminho, ouvem dizer que Jesus está passando e começam a gritar: "Senhor, Filho de Davi, tenha misericórdia de nós!". A invocação "Filho de Davi" expressa o reconhecimento messiânico de Jesus, título já presente em 9.27, 12.23 e 15.22. O relato não esclarece quanto aqueles homens compreendiam sobre a missão do Messias, mas apresenta com nitidez sua confiança: dirigem-se a Jesus e esperam dele misericórdia. Sua limitação visual não os impede de reconhecer naquele que passa a possibilidade de socorro.</p>
+        <p>A multidão os repreende para que se calem, repetindo, em miniatura, o gesto dos discípulos que tentaram afastar as crianças em 19.13: sempre que o Reino se aproxima, alguém tenta silenciar quem clama por misericórdia. Mas os cegos gritam ainda mais alto, e é essa persistência, não o volume da multidão, que chega aos ouvidos de Jesus.</p>
+
+        <p class="movement">Observação exegética · um retrato do coração que recebe</p>
+        <p>Esses dois homens ouvem que Jesus está passando e clamam por misericórdia. Diante da repreensão da multidão, insistem no pedido, revelando a intensidade de sua necessidade e de sua confiança. O texto não permite afirmar que jamais teriam outra oportunidade de encontrá-lo, nem descreve expectativas políticas associadas ao título "Filho de Davi". O que Mateus registra é suficiente para orientar a leitura: eles pedem que seus olhos sejam abertos; Jesus, movido de compaixão, toca-lhes os olhos; e, recuperada a visão, eles o seguem. O movimento narrativo vai da necessidade apresentada à misericórdia recebida e desta ao seguimento.</p>
+        <p>Sobre o número de cegos há uma questão textual conhecida: Marcos e Lucas mencionam um só, e Marcos lhe dá nome, Bartimeu; Mateus fala em dois, como já havia feito em 9.27–31. As explicações propostas variam, e nenhuma delas se impõe com certeza absoluta sobre as demais; a mais equilibrada reconhece que ambos os relatos podem ser historicamente exatos, com a tradição petrina por trás de Marcos concentrando-se no homem que talvez o próprio Pedro conhecesse pessoalmente. Diante de uma questão legítima, mas secundária, prefere-se aqui não fixar posição categórica e manter o foco naquilo que todos os relatos afirmam sem exceção: a compaixão de Jesus e a fé persistente dos que clamam.</p>
+
+        <div class="citation-block">"Todavia, é igualmente provável que de fato dois homens tenham recuperado a vista, e que a tradição petrina da história conhecida de Marcos tenha concentrado a atenção unicamente num dos beneficiários, que talvez Pedro conhecesse pessoalmente."<cite>TASKER, R. V. G. Evangelho de Mateus: Introdução e Comentário, p. 156.</cite></div>
+
+        <p class="movement">Teologia bíblica</p>
+        <p>Jesus para, no meio de uma multidão em marcha e às vésperas da própria paixão, para perguntar a dois mendigos: "O que vocês querem que eu lhes faça?". A pergunta já é, em si, um sermão sobre o versículo 28: aquele que não veio para ser servido serve, com toda a atenção, dois homens que ninguém mais julgava dignos de atenção. E o relato termina com a palavra mais importante de toda a perícope: "o seguiram". A visão restaurada não é o fim da história, é o seu verdadeiro começo, porque na grande inversão do Reino ver de verdade e seguir são, sempre, o mesmo movimento.</p>
+
+        <p class="movement">Aplicação pastoral</p>
+        <p>A persistência desses homens nos encoraja a apresentar nossas necessidades a Cristo, mesmo quando encontramos incompreensão ou desestímulo. Por analogia pastoral, sua atitude também nos convida à perseverança na oração, na escuta da Palavra e na comunhão com o povo de Deus. Essas práticas cultivam nossa vida de fé, mas não constituem condições pelas quais controlamos a ação divina ou garantimos uma cura. A iniciativa compassiva pertence a Jesus. À comunidade cabe aprender com ele: ouvir quem clama, acolher quem sofre e facilitar sua aproximação, em vez de reproduzir a atitude da multidão que procurava silenciá-los.</p>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="sintese" class="wrap">
+    <h2>Síntese: a grande inversão do Reino</h2>
+    <div class="sintese-box">
+      <p>As quatro cenas de Mateus 20 apresentam dimensões complementares da vida no Reino. A parábola da vinha revela a graça que rejeita o mérito e confronta o ressentimento diante da generosidade divina; a predição da paixão anuncia o caminho de sofrimento, morte e ressurreição do Filho do Homem; o ensino aos discípulos redefine a grandeza pelo serviço e a fundamenta na entrega de Jesus em resgate por muitos; e a cura dos cegos manifesta a compaixão que acolhe o clamor e conduz ao seguimento (discipulado revelado no ato de seguir a Jesus). Unidas pelo caminho de Jesus para Jerusalém, essas cenas chamam os discípulos a abandonar a pretensão de superioridade e a aprender com o próprio Rei a receber, servir e seguir.</p>
+      <p class="bailey-q">"Pedro, Tiago e João são iguais, no Reino de Deus, ao mendigo cego da estrada de Jericó?"<br>· Kenneth E. Bailey</p>
+      <p>O capítulo inteiro responde que sim, e é essa resposta, mais do que qualquer outra, que a Igreja precisa reaprender a cada geração. À pergunta de Pedro em 19.27, "Que recompensa, pois, teremos?", a sequência do evangelho responde com promessa e correção. Jesus reconhece a renúncia dos discípulos e lhes anuncia recompensa, mas não lhes concede o direito de transformar essa promessa em superioridade sobre os demais. A graça que rejeita o mérito não desvaloriza a fidelidade; impede que ela seja apresentada como crédito que obrigue Deus ou limite sua generosidade. O capítulo termina com dois homens que recebem a visão e seguem Jesus: a misericórdia acolhida abre caminho para uma vida de discipulado.</p>
+    </div>
+  </section>
+
+  <section class="wrap liturgia" id="liturgia">
+    <div class="lit-block">
+      <p class="eyebrow">Oração</p>
+      <p>Senhor Jesus, tantas vezes contamos as horas do nosso serviço e comparamos a nossa recompensa com a do outro. Ensina-nos a alegria de quem recebe, e não a amargura de quem calcula. Tu que subiste a Jerusalém para morrer, dá-nos a graça de medir a grandeza pelo serviço, e não pelo poder. E quando clamarmos por misericórdia, mesmo que o mundo tente nos calar, para e nos escuta, como paraste por dois cegos à beira do caminho. Amém.</p>
+    </div>
+    <div class="lit-block">
+      <p class="eyebrow">Prática da semana</p>
+      <p>Escolha um serviço discreto, sem buscar reconhecimento, e o realize como expressão da graça recebida. Considere especialmente alguém que enfrenta dificuldade de trabalho, sustento ou acesso a cuidados: ofereça ajuda compatível com suas possibilidades, uma oportunidade, uma indicação ou acompanhamento concreto. Sirva sem exigir retribuição, e procure alegrar-se também com o bem que essa pessoa receber de outros.</p>
+    </div>
+    <div class="lit-block">
+      <p class="eyebrow">Pergunta para meditação</p>
+      <p>Existe, na minha vida de fé, algum "olho mau" que ainda mede a bondade de Deus para com o outro pela régua do que eu mesmo julgo merecer?</p>
+    </div>
+  </section>
+
+  <section id="referencias" class="wrap">
+    <h2>Referências bibliográficas</h2>
+    <div class="refs-group">
+      <h3>Obras citadas</h3>
+      <ul class="refs-list">
+        <li><b>BAILEY, Kenneth E.</b> Jesus pela ótica do Oriente Médio: estudos culturais sobre os Evangelhos. São Paulo: Vida Nova.</li>
+        <li><b>BARCLAY, William.</b> Mateus.</li>
+        <li><b>CARSON, D. A.</b> O Comentário de Mateus. São Paulo: Vida Nova/Shedd Publicações.</li>
+        <li><b>CULPEPPER, R. Alan.</b> The People of the Parables: Galilee in the Time of Jesus. Louisville: Westminster John Knox Press, 2024.</li>
+        <li><b>FRANCE, R. T.</b> The Gospel of Matthew. Grand Rapids: William B. Eerdmans Publishing Company, 2007. [New International Commentary on the New Testament].</li>
+        <li><b>KEENER, Craig S.</b> Comentário Histórico-Cultural da Bíblia: Novo Testamento. Edição ampliada. São Paulo: Vida Nova.</li>
+        <li><b>LEE-BARNEWALL, Michelle.</b> Surprised by the Parables: Growing in Grace through the Stories of Jesus. Bellingham, WA: Lexham Press, 2020. E-book, formato EPUB.</li>
+        <li><b>LOPES, Hernandes Dias.</b> Mateus: Jesus, o Rei dos reis.</li>
+        <li><b>RYLE, J. C.</b> Meditações no Evangelho de Mateus.</li>
+        <li><b>TASKER, R. V. G.</b> Evangelho de Mateus: Introdução e Comentário.</li>
+        <li><b>WILLARD, Dallas.</b> The Scandal of the Kingdom: How the Parables of Jesus Revolutionize Life with God. Prefácio de John Mark Comer. Zondervan, 2024. E-book, formato EPUB.</li>
+      </ul>
+    </div>
+    <div class="refs-group">
+      <h3>Fontes consultadas na preparação desta aula</h3>
+      <ul class="refs-list">
+        <li><b>OSBORNE, Grant R.</b> Matthew [Zondervan Exegetical Commentary on the New Testament].</li>
+        <li><b>HAGNER, Donald A.</b> Word Biblical Commentary, v. 33B, Matthew 14–28.</li>
+        <li><b>TURNER, David L.</b> Matthew [Baker Exegetical Commentary on the New Testament].</li>
+        <li><b>RADMACHER, E.; ALLEN, R.; HOUSE, H. W.</b> [org.]. O Novo Comentário Bíblico: Novo Testamento, Mateus.</li>
+        <li><b>VANDE KAPPELLE, Robert P.</b> Living Water: A Wisdom Approach to the Parables of Jesus. Eugene, OR: Wipf & Stock, 2022.</li>
+        <li><b>ZIGABENOS, Euthymios.</b> Commentary on the Holy Gospel of Matthew.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<section class="quiz-section" id="quiz">
+  <div class="wrap">
+    <div class="quiz-head">
+      <p class="eyebrow">Verifique seu entendimento</p>
+      <h2>Quiz · Mateus 20.1–34</h2>
+      <p>Dez perguntas sobre as quatro cenas da aula. Escolha uma alternativa para ver a correção na hora.</p>
+    </div>
+    <div class="quiz-card" id="quizCard"></div>
+  </div>
+</section>
+
+<footer>Escola Bíblica · Estudos Expositivos · Mateus 20.1–34 · Arisvaldo Marinho Cunha</footer>
+
+<script>
+(function(){
+  var QUESTIONS = [
+    {
+      scene:"Introdução", color:"var(--scene2)",
+      q:"Qual das alternativas reproduz corretamente a tese central da aula sobre as quatro cenas de Mateus 20?",
+      options:[
+        "A graça que rejeita o mérito, a cruz que precede a glória, o serviço que redefine o critério de grandeza e a compaixão que enxerga o desprezado.",
+        "A fé que exige o mérito, a cruz que segue a glória, o serviço que garante recompensa e a visão que produz gratidão.",
+        "A graça que nivela o mérito, a cruz que anuncia a ressurreição, o poder que se converte em serviço e a compaixão que exige retribuição.",
+        "A graça que premia o esforço, a cruz que revela fraqueza, o serviço que busca reconhecimento e a compaixão que aguarda gratidão."
+      ],
+      correct:0,
+      feedback:"É a fórmula que perpassa as quatro cenas: graça que rejeita o mérito (vinha), cruz que precede a glória (predição), serviço que redefine a grandeza (pedido dos filhos de Zebedeu) e compaixão que enxerga o desprezado (os dois cegos)."
+    },
+    {
+      scene:"Cena I", color:"var(--scene1)",
+      q:"Segundo as estimativas de Culpepper citadas na aula, o que se pode afirmar sobre o poder de compra do denário na parábola da vinha?",
+      options:[
+        "Que era insuficiente até mesmo para uma única refeição.",
+        "Que equivalia, com precisão, ao salário mínimo romano oficial.",
+        "Que podia adquirir alimento para uma família por vários dias, embora parte da renda tivesse outros destinos obrigatórios.",
+        "Que era pago apenas em espécie, nunca em moeda corrente."
+      ],
+      correct:2,
+      feedback:"A aula evita reduzir o denário a uma equivalência fixa com um único dia de alimentação: Culpepper reúne estimativas de que ele podia sustentar uma família por vários dias, ainda que parte da renda tivesse destinos obrigatórios."
+    },
+    {
+      scene:"Cena I", color:"var(--scene1)",
+      q:"Por que Kenneth E. Bailey prefere chamar esta história de \"Parábola do Empregador Compassivo\"?",
+      options:[
+        "Porque os trabalhadores não têm nenhuma relevância teológica na narrativa.",
+        "Pelo mesmo motivo que prefere chamar a parábola de Lucas 15 de \"Parábola do Pai\": o centro dramático está em quem dá, não em quem recebe.",
+        "Porque o texto grego original já traz esse título no manuscrito mais antigo.",
+        "Porque essa era a única parábola de Jesus que tratava de relações de trabalho."
+      ],
+      correct:1,
+      feedback:"Bailey aplica o mesmo princípio interpretativo às duas parábolas: assim como prefere \"Parábola do Pai\" a \"Filho Pródigo\", prefere nomear esta pelo doador generoso, não pelos que recebem."
+    },
+    {
+      scene:"Cena I", color:"var(--scene1)",
+      q:"Qual NÃO é uma das três surpresas que Bailey identifica no centro da parábola da vinha?",
+      options:[
+        "Um administrador surge do nada para pagar os trabalhadores.",
+        "O senhor ordena que se pague a todos o salário integral de um dia.",
+        "A ordem de pagamento é deliberadamente invertida, do último ao primeiro.",
+        "O proprietário devolve parte do salário aos trabalhadores da primeira hora."
+      ],
+      correct:3,
+      feedback:"As três surpresas são o administrador inesperado, o pagamento integral a todos e a inversão da ordem de pagamento. Não há qualquer devolução de salário no texto."
+    },
+    {
+      scene:"Cena II", color:"var(--scene2)",
+      q:"Segundo a análise do vocabulário grego apresentada na aula, o que marca a primeira predição da paixão (16.21)?",
+      options:[
+        "O verbo paradidomi, já nomeando os agentes da entrega de Jesus.",
+        "O verbo dei, um impessoal de necessidade, sem qualquer agente humano nomeado.",
+        "Uma citação direta de Isaías 53 sobre o Servo sofredor.",
+        "A menção explícita aos gentios como executores da sentença."
+      ],
+      correct:1,
+      feedback:"Na primeira predição o verbo decisivo é dei (\"é necessário\"): a cruz pertence ao plano soberano de Deus antes de qualquer agente humano ser nomeado. O verbo paradidomi só aparece a partir da segunda predição."
+    },
+    {
+      scene:"Cena II", color:"var(--scene2)",
+      q:"Na terceira predição (20.18-19), o verbo paradidomi aparece duas vezes. Qual é a \"cadeia de custódia\" que ele descreve?",
+      options:[
+        "De Pilatos para Herodes, e de Herodes de volta a Pilatos.",
+        "Dos principais sacerdotes e escribas, que julgam e condenam, para os gentios, que executam a sentença.",
+        "Dos gentios para os principais sacerdotes, invertendo a ordem usual do processo.",
+        "Dos Doze para a multidão, que exige a crucificação."
+      ],
+      correct:1,
+      feedback:"A primeira entrega é aos principais sacerdotes e escribas, que julgam e condenam; a segunda é destes para os gentios, que executam a sentença: o mesmo verbo, paradidomi, que o evangelho reserva para a traição de Judas em 26.25."
+    },
+    {
+      scene:"Cena III", color:"var(--scene3)",
+      q:"Quem formulou o pedido para que Tiago e João se assentassem à direita e à esquerda de Jesus?",
+      options:[
+        "Os próprios Tiago e João, diretamente a Jesus.",
+        "A mãe dos filhos de Zebedeu, em nome dos dois.",
+        "Pedro, em nome de todos os Doze.",
+        "Judas Iscariotes, na condição de tesoureiro do grupo."
+      ],
+      correct:1,
+      feedback:"Foi a mãe dos filhos de Zebedeu quem se aproximou de Jesus e formulou o pedido, prostrando-se antes mesmo de falar; a intercessão por meio de uma mãe era, com frequência, mais eficaz do que a petição direta de um filho."
+    },
+    {
+      scene:"Cena III", color:"var(--scene3)",
+      q:"Segundo o versículo 28, como se mede a verdadeira grandeza no Reino?",
+      options:[
+        "Pelo número de pessoas que servem a alguém.",
+        "Pela proximidade física com Jesus durante o ministério terreno.",
+        "Por quantos alguém serve, não por quantos o servem.",
+        "Pela disposição de negociar lugares de honra com antecedência."
+      ],
+      correct:2,
+      feedback:"O ponto culminante da perícope é o v. 28: a grandeza no Reino não se mede por quantos servem a alguém, mas por quantos alguém serve: o próprio Filho do Homem é o padrão dessa inversão."
+    },
+    {
+      scene:"Cena IV", color:"var(--scene4)",
+      q:"Marcos e Lucas mencionam um só cego (e Marcos o nomeia, Bartimeu); Mateus fala em dois. Como a aula trata essa diferença?",
+      options:[
+        "Como uma contradição insolúvel entre os evangelhos, que enfraquece a confiabilidade do relato.",
+        "Como um erro de transmissão textual que deveria ser corrigido nas traduções modernas.",
+        "Sem fixar posição categórica, mantendo o foco no que todos os relatos afirmam sem exceção: a compaixão de Jesus e a fé persistente dos que clamam.",
+        "Como prova de que Mateus inventou um segundo personagem por razões literárias."
+      ],
+      correct:2,
+      feedback:"A aula não resolve a questão categoricamente: reconhece que é uma diferença legítima, mas secundária, e mantém o foco no que todos os relatos afirmam sem exceção: a compaixão de Jesus e a fé persistente dos que clamam."
+    },
+    {
+      scene:"Cena IV", color:"var(--scene4)",
+      q:"Segundo a aplicação pastoral da Cena IV, qual é o papel da oração, da escuta da Palavra e da comunhão diante da cura dos cegos?",
+      options:[
+        "São condições que, se cumpridas com fé suficiente, garantem uma resposta de Deus.",
+        "Cultivam a vida de fé, mas não são condições pelas quais controlamos a ação divina ou garantimos uma resposta: a iniciativa compassiva pertence a Jesus.",
+        "São irrelevantes, já que os dois cegos foram curados sem qualquer prática religiosa prévia.",
+        "Substituem a necessidade de clamar publicamente por socorro."
+      ],
+      correct:1,
+      feedback:"A aula é explícita nesse ponto: essas práticas cultivam a vida de fé, mas não constituem condições pelas quais controlamos a ação divina ou garantimos uma cura. A iniciativa compassiva pertence a Jesus; à comunidade cabe ouvir quem clama e facilitar sua aproximação."
+    }
+  ];
+
+  var current = 0;
+  var score = 0;
+  var answered = false;
+  var card = document.getElementById('quizCard');
+
+  function render(){
+    if(current >= QUESTIONS.length){ renderResult(); return; }
+    var item = QUESTIONS[current];
+    answered = false;
+    var pct = Math.round((current / QUESTIONS.length) * 100);
+
+    var html = '';
+    html += '<div class="quiz-progress-row"><span>Pergunta ' + (current+1) + ' de ' + QUESTIONS.length + '</span><span>' + item.scene + '</span></div>';
+    html += '<div class="quiz-progress-track"><div class="quiz-progress-fill" style="width:' + pct + '%"></div></div>';
+    html += '<p class="quiz-q-tag" style="--scene-color:' + item.color + '">' + item.scene + '</p>';
+    html += '<p class="quiz-question">' + item.q + '</p>';
+    html += '<div class="quiz-options" id="optWrap">';
+    var letters = ['A','B','C','D'];
+    item.options.forEach(function(opt, i){
+      html += '<button class="quiz-option" data-i="' + i + '"><span class="letter">' + letters[i] + '</span><span>' + opt + '</span></button>';
+    });
+    html += '</div>';
+    html += '<div class="quiz-feedback" id="feedback"></div>';
+    html += '<div class="quiz-footer-row"><button class="btn" id="nextBtn" disabled>' + (current === QUESTIONS.length - 1 ? 'Ver resultado' : 'Próxima pergunta') + '</button></div>';
+
+    card.innerHTML = html;
+
+    var buttons = card.querySelectorAll('.quiz-option');
+    buttons.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if(answered) return;
+        answered = true;
+        var chosen = parseInt(btn.getAttribute('data-i'), 10);
+        var isCorrect = chosen === item.correct;
+        if(isCorrect) score++;
+
+        buttons.forEach(function(b){
+          b.disabled = true;
+          var bi = parseInt(b.getAttribute('data-i'), 10);
+          if(bi === item.correct) b.classList.add('correct');
+          else if(bi === chosen) b.classList.add('wrong');
+        });
+
+        var fb = document.getElementById('feedback');
+        fb.className = 'quiz-feedback show ' + (isCorrect ? 'ok' : 'bad');
+        fb.innerHTML = '<strong>' + (isCorrect ? 'Correto' : 'Não é essa') + '</strong>' + item.feedback;
+
+        document.getElementById('nextBtn').disabled = false;
+      });
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', function(){
+      current++;
+      render();
+      card.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  }
+
+  function renderResult(){
+    var pct = Math.round((score / QUESTIONS.length) * 100);
+    var msg;
+    if(score === QUESTIONS.length){
+      msg = "Domínio completo das quatro cenas. Como os dois cegos de Jericó, o senhor não apenas enxergou o texto: reteve cada passo do caminho.";
+    } else if(score >= QUESTIONS.length - 2){
+      msg = "Muito bom entendimento da aula. Vale revisar as duas ou três cenas onde a resposta escapou, mas o fio teológico do capítulo está bem assimilado.";
+    } else if(score >= QUESTIONS.length / 2){
+      msg = "Um entendimento razoável do essencial. Releia com atenção as cenas cujas perguntas geraram dúvida antes de aprofundar-se na aplicação pastoral.";
+    } else {
+      msg = "Vale retomar a leitura da aula com calma, cena por cena, antes de seguir adiante. O objetivo não é a nota, é reter o único fio que atravessa o capítulo: a graça.";
+    }
+
+    card.innerHTML =
+      '<div class="quiz-result">' +
+        '<div class="score">' + score + ' / ' + QUESTIONS.length + '</div>' +
+        '<div class="score-label">' + pct + '% de acerto</div>' +
+        '<p>' + msg + '</p>' +
+        '<div class="btn-row">' +
+          '<button class="btn ghost" id="restartBtn">Refazer o quiz</button>' +
+          '<a class="btn" style="text-decoration:none;display:inline-flex;align-items:center;" href="#intro">Rever a aula</a>' +
+        '</div>' +
+      '</div>';
+
+    document.getElementById('restartBtn').addEventListener('click', function(){
+      current = 0; score = 0;
+      render();
+      card.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  }
+
+  render();
+})();
+</script>
